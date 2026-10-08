@@ -50,7 +50,7 @@ func saludo() string {
 	if s := os.Getenv("SALUDO"); s != "" {
 		return s
 	}
-	return "¡Hola desde rendimiento-demo!"
+	return "¡Hola soy abi!"
 }
 
 func handler() http.Handler {
