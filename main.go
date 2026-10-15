@@ -2,6 +2,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"html/template"
@@ -56,6 +57,8 @@ func saludo() string {
 func handler() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) {
+		_, tramo := tracer.Start(r.Context(), "pintar-pagina")
+		defer tramo.End()
 		host, _ := os.Hostname()
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		_ = page.Execute(w, map[string]any{
@@ -81,7 +84,8 @@ func main() {
 	if port == "" {
 		port = "8080"
 	}
+	defer startTracing(context.Background())(context.Background())
 	log.Printf("rendimiento-demo %s escuchando en :%s", version, port)
-	srv := &http.Server{Addr: ":" + port, Handler: handler(), ReadHeaderTimeout: 5 * time.Second}
+	srv := &http.Server{Addr: ":" + port, Handler: traced(handler()), ReadHeaderTimeout: 5 * time.Second}
 	log.Fatal(srv.ListenAndServe())
 }
