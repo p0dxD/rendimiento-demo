@@ -14,3 +14,6 @@ services:
   test:
     command: go test ./...
     image: golang:1.24
+# Trazas para el universo de rendimiento: Go no tiene agente, así que
+# tracing.go las manda con el SDK de OpenTelemetry, a donde diga la plataforma.
+observe: true
