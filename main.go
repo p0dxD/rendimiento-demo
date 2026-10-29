@@ -47,6 +47,21 @@ var page = template.Must(template.New("page").Parse(`<!doctype html>
   <p>servidor <code>{{.Host}}</code> · encendida hace {{.Encendida}} · visita n.º {{.Visitas}}</p>
 </main></body></html>`))
 
+// hace dice cuánto lleva encendida, como lo diría una persona: «45 s»,
+// «3 min», «2 h 5 min», «3 días».
+func hace(d time.Duration) string {
+	switch {
+	case d < time.Minute:
+		return fmt.Sprintf("%d s", int(d.Seconds()))
+	case d < time.Hour:
+		return fmt.Sprintf("%d min", int(d.Minutes()))
+	case d < 24*time.Hour:
+		return fmt.Sprintf("%d h %d min", int(d.Hours()), int(d.Minutes()))
+	default:
+		return fmt.Sprintf("%d días", int(d.Hours()/24))
+	}
+}
+
 func saludo() string {
 	if s := os.Getenv("SALUDO"); s != "" {
 		return s
@@ -65,7 +80,7 @@ func handler() http.Handler {
 			"Saludo":    saludo(),
 			"Version":   version,
 			"Host":      host,
-			"Encendida": time.Since(started).Round(time.Second),
+			"Encendida": hace(time.Since(started)),
 			"Visitas":   visitas.Add(1),
 		})
 	})
