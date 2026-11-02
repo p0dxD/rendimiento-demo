@@ -56,7 +56,7 @@ func hace(d time.Duration) string {
 	case d < time.Hour:
 		return fmt.Sprintf("%d min", int(d.Minutes()))
 	case d < 24*time.Hour:
-		return fmt.Sprintf("%d h %d min", int(d.Hours()), int(d.Minutes()))
+		return fmt.Sprintf("%d h %d min", int(d.Hours()), int(d.Minutes())%60)
 	default:
 		return fmt.Sprintf("%d días", int(d.Hours()/24))
 	}
