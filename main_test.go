@@ -45,6 +45,7 @@ func TestHace(t *testing.T) {
 		45 * time.Second:             "45 s",
 		3 * time.Minute:              "3 min",
 		2*time.Hour + 5*time.Minute:  "2 h 5 min",
+		23*time.Hour + 59*time.Minute: "23 h 59 min",
 		3*24*time.Hour + 4*time.Hour: "3 días",
 	}
 	for d, quiero := range casos {
